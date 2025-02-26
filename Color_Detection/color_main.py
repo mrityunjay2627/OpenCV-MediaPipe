@@ -52,5 +52,6 @@ while True:
             text = cv2.putText(img, "Red Color", (x,y), cv2.FONT_HERSHEY_SIMPLEX, fontScale=1 , color=(0,0,255) , thickness=2)
     cv2.imshow("Red Color Detection", img)
     if cv2.waitKey(27) & 0xff==ord('q'):
+        webcam.release()
         cv2.destroyAllWindows()
         break
