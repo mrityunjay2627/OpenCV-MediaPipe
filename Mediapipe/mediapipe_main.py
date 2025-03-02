@@ -23,7 +23,7 @@ with mp_holistic.Holistic(min_detection_confidence = 0.5, min_tracking_confidenc
     # confidence means how reliable features selection is. But to avoid overfitting, don't keep confidence 1 (100%)
     while cap.isOpened():
         ret, frame = cap.read()
-        img = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+        img = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB) # Mediapipe works with RGB, OpenCV works with BGR
         results = holistic.process(img)
         img = cv2.cvtColor(frame,cv2.COLOR_RGB2BGR) # frame
         mp_drawing.draw_landmarks(img, results.face_landmarks, mp_holistic.FACEMESH_TESSELATION)
