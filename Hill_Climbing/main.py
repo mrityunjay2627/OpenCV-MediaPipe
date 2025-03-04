@@ -22,24 +22,26 @@ with mp_holistic.Holistic(min_detection_confidence = 0.5, min_tracking_confidenc
         height, width, _ = img.shape
 
         try:
-            right_hand = (results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST].x * width,
-                          results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST].y * height) # Works for opposite (left)
+            # right_hand = (results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST].x * width,
+                        #   results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST].y * height) # Works for opposite (left) due to image flip.
             left_hand = (results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST].x * width,
-                          results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST].y * height) # Works for opposite (right)
+                          results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST].y * height) # Works for opposite (right) due to image flip.
             
             y_mid = height//2 # To accelerate/ deaccelerate (If above y_mid: accelerate ; else: deaccelerate)
             pose = 'move'
-            if right_hand[1]<=y_mid:
+            if left_hand[1]<y_mid:
                 pose="acc"
                 pydirectinput.keyDown('right') # Press 'right' arrow key for acceleration
                 pydirectinput.keyUp('left') # Unpress 'left' arrow key
-            elif right_hand[1]>y_mid:
+            elif left_hand[1]>y_mid:
                 pose="deacc"
                 pydirectinput.keyDown('left')
                 pydirectinput.keyUp('right')
 
             cv2.putText(img, pose, (20,8), cv2.FONT_HERSHEY_COMPLEX, 1.0, (255,255,0), 2)
             cv2.line(img, (0,y_mid), (width, y_mid), (255,0,255), 2)
+
+            cv2.imshow('Hill Climb Racing',img)
 
             if cv2.waitKey(10) & 0xff==ord('q'):
                 break
